@@ -1,15 +1,19 @@
 import React from 'react';
-import { Canvas} from "@react-three/fiber"
+import { Canvas } from "@react-three/fiber"
 import './styles/App.css';
 import { Scene } from './scenes/Scene';
+import { Physics } from '@react-three/cannon';
 
 function App() {
   return (
-    <div className="App">
+    <div className="flex h-screen">
       <Canvas id='canvas'>
-        <Scene>
+        <Physics
+          broadphase='SAP'
+          gravity={[0, 0, 0]}>
 
-        </Scene>
+          <Scene />
+        </Physics>
       </Canvas>
     </div>
   );
