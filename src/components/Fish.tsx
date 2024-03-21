@@ -17,9 +17,10 @@ export const Fish = () => {
     const rotateFish = randomZ === 6;
 
     const [ref, api] = useBox(() => ({
-        type: 'Kinematic',
+        type: 'Dynamic',
+        mass: 0,
         position: [randomX, 0, randomZ],
-        name: "Fish",
+        userData: { name: "Fish" },
     }));
 
     useEffect(() => {
@@ -50,7 +51,7 @@ export const Fish = () => {
                     rotation={[0, rotateFish ? Math.PI : 0, 0]}
                 />
                 <mesh>
-                    <boxGeometry args={[1, 1, 1]} />
+                    <boxGeometry args={[0.5, 0.5, 0.5]} />
                     <meshBasicMaterial wireframe={true} />
                 </mesh>
             </group>

@@ -1,23 +1,31 @@
 import { useSphere } from "@react-three/cannon";
 import { Sphere } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import React from "react";
+import React, { useContext } from "react";
 import { Mesh, Vector3 } from "three";
+import { SceneContext } from "../scenes/Scene";
 
 export const Bullet = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
+    const { handleFishHit } = useContext(SceneContext); // Använda kontexten
+
     const [ref, api] = useSphere(() => ({
         type: 'Kinematic',
+        mass: 0,
         position,
+        onCollide: (e) => {
+            console.log("Kollision detekterad", e.body.userData.name);
+            if (e.body.userData.name === "Fish") {
+                handleFishHit();
+
+            }
+        },
     }));
 
     const direction = new Vector3();
 
     useFrame(() => {
-        // Omvandla rotationsvinkeln till en riktningsvektor
         direction.set(-Math.sin(rotation), 0, -Math.cos(rotation)).normalize();
-        // Multiplicera med den önskade hastigheten för skottet
         direction.multiplyScalar(5);
-        // Uppdatera skottets hastighet
         api.velocity.set(direction.x, direction.y, direction.z);
     });
 
@@ -27,5 +35,3 @@ export const Bullet = ({ position, rotation }: { position: [number, number, numb
         </Sphere>
     );
 };
-
-

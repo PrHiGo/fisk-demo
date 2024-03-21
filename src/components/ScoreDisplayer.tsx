@@ -1,19 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 
-
-export const ScoreDisplayer = () => {
-    const [score, setScore] = useState(0);
-
-    const handleFishHit = () => {
-        setScore(score + 10);
-    }
-
-
+export const ScoreDisplayer = ({ score }: { score: number }) => {
     return (
-        <>
-            <div>
-                <h1>`Score: ${score}`</h1>
-            </div>
-        </>
+
+        <div className="absolute">
+            <h1>`Score: ${score}`</h1>
+        </div>
+
     )
 };

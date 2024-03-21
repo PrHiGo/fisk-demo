@@ -11,7 +11,6 @@ function App() {
         <Physics
           broadphase='SAP'
           gravity={[0, 0, 0]}>
-
           <Scene />
         </Physics>
       </Canvas>
