@@ -1,14 +1,19 @@
 import React from 'react';
+import { useThree } from '@react-three/fiber';
 
-export const Frame = ({ size = 10, thickness = 0.2, height = 0.5 }) => {
-    const halfSize = size / 2;
+export const Frame = ({ thickness = 0.3, height = 0.5 }) => {
+    const { viewport } = useThree();
 
-    // Kordinaterna för ramens kanter
+    // Använd viewportens bredd och höjd för att definiera ramens storlek
+    const frameWidth = viewport.width - 1;
+    const frameHeight = viewport.height - 1;
+
+    // Kordinaterna för ramens kanter, skalade baserat på viewport
     const edges = [
-        { position: [0, height / 2, halfSize + thickness / 2], scale: [size, height, thickness], }, // Fram
-        { position: [0, height / 2, -halfSize - thickness / 2], scale: [size, height, thickness] }, // Bak
-        { position: [halfSize + thickness / 2, height / 2, 0], scale: [thickness, height, size + 0.4] }, // Höger
-        { position: [-halfSize - thickness / 2, height / 2, 0], scale: [thickness, height, size + 0.4] }, // Vänster
+        { position: [0, height / 2, frameHeight / 2 + thickness / 2], scale: [frameWidth, height, thickness] }, // Fram
+        { position: [0, height / 2, -frameHeight / 2 - thickness / 2], scale: [frameWidth, height, thickness] }, // Bak
+        { position: [frameWidth / 2 + thickness / 2, height / 2, 0], scale: [thickness, height, frameHeight + thickness] }, // Höger
+        { position: [-frameWidth / 2 - thickness / 2, height / 2, 0], scale: [thickness, height, frameHeight + thickness] }, // Vänster
     ];
 
     return (
@@ -16,7 +21,7 @@ export const Frame = ({ size = 10, thickness = 0.2, height = 0.5 }) => {
             {edges.map((edge, i) => (
                 <mesh key={i} position={edge.position as [number, number, number]}>
                     <boxGeometry args={edge.scale as [number, number, number]} />
-                    <meshStandardMaterial color="gray" />
+                    <meshStandardMaterial color="black" />
                 </mesh>
             ))}
         </>

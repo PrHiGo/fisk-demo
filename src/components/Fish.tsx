@@ -1,32 +1,59 @@
-import React, { useEffect } from "react";
-import { useLoader, useThree } from "@react-three/fiber";
+import React, { useEffect, useRef } from "react";
+import { useLoader, useThree, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { useBox } from "@react-three/cannon";
 import { useAnimations } from "@react-three/drei";
 import FishModel from "../models/angler_low.glb";
+import { Mesh } from "three";
+import { Group } from "three";
 
-export const Fisk = () => {
+export const Fish = () => {
     const gltf = useLoader(GLTFLoader, FishModel);
     const { scene, animations } = gltf;
-    const { ref, actions } = useAnimations(animations, scene);
+    const { actions } = useAnimations(animations, scene);
+
+    const randomX = Math.floor(Math.random() * 21) - 10;
+    const randomZ = Math.random() >= 0.5 ? -6 : 6;
+    const rotateFish = randomZ === 6;
+
+    const [ref, api] = useBox(() => ({
+        type: 'Kinematic',
+        position: [randomX, 0, randomZ],
+        name: "Fish",
+    }));
 
     useEffect(() => {
-        // Kontrollera att 'actions' innehåller de animationer vi förväntar oss och att 'ref' är satt
-        if (ref.current && actions) {
+        if (actions) {
             const action = Object.values(actions)[0];
             if (action) {
                 action.play();
             }
         }
-    }, [actions, ref]);
+    }, [actions]);
+
+    // Fiskjäveln rör på sig här
+    useFrame((state, delta) => {
+        if (rotateFish) {
+            api.velocity.set(0, 0, -1);
+        } else {
+            api.velocity.set(0, 0, 1);
+        }
+    });
 
     return (
-        <primitive
-            ref={ref}
-            object={scene}
-            scale={[1, 1, 1]}
-            position={[0, 2.5, -5]}
-            rotation={[0, 0, 0]} // Rotera modellen 180 grader runt y-axeln
-        />
+        <>
+            <group ref={ref as React.MutableRefObject<Group>}>
+                <primitive
+                    ref={ref}
+                    object={scene}
+                    scale={[1, 1, 1]}
+                    rotation={[0, rotateFish ? Math.PI : 0, 0]}
+                />
+                <mesh>
+                    <boxGeometry args={[1, 1, 1]} />
+                    <meshBasicMaterial wireframe={true} />
+                </mesh>
+            </group>
+        </>
     );
 };
-
