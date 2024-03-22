@@ -6,6 +6,7 @@ import { Frame } from "../components/Frame";
 import { Fish } from "../components/Fish";
 import { GunBlaster } from "../components/GunBlaster";
 import { ScoreDisplayer } from "../components/ScoreDisplayer";
+import { FishPool } from "../components/FishPool";
 
 interface SceneProps {
     children?: ReactNode;
@@ -35,9 +36,8 @@ export const Scene: React.FC<SceneProps> = ({ children }) => {
                 />
                 <Ground />
                 <Frame />
-                <Fish />
+                <FishPool />
                 <GunBlaster />
-                <ScoreDisplayer score={score} />
                 <PerspectiveCamera makeDefault position={[0, 20, 0]} />
                 <OrbitControls />
             </Suspense>

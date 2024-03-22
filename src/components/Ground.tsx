@@ -9,7 +9,7 @@ export const Ground = () => {
     const [ref] = usePlane<Mesh>(() => ({
         rotation: [-Math.PI / 2, 0, 0],
         position: [0, 0, 0],
-        type: 'Static'
+        type: 'Kinematic'
     }));
 
     // Använd viewportens bredd och höjd för att definiera planetens storlek
