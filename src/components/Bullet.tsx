@@ -3,22 +3,14 @@ import { Sphere } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import React, { useContext } from "react";
 import { Mesh, Vector3 } from "three";
-import { SceneContext } from "../scenes/Scene";
 
 export const Bullet = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
-    const { handleFishHit } = useContext(SceneContext); // Använda kontexten
 
     const [ref, api] = useSphere(() => ({
-        type: 'Kinematic',
+        type: 'Dynamic',
         mass: 0,
         position,
-        onCollide: (e) => {
-            console.log("Kollision detekterad", e.body.userData.name);
-            if (e.body.userData.name === "Fish") {
-                handleFishHit();
-
-            }
-        },
+        userData: { name: "Bullet" },
     }));
 
     const direction = new Vector3();
@@ -31,7 +23,7 @@ export const Bullet = ({ position, rotation }: { position: [number, number, numb
 
     return (
         <Sphere ref={ref as React.MutableRefObject<Mesh>} args={[0.1, 64, 64]} position={position}>
-            <meshBasicMaterial attach="material" color="red" />
+            <meshBasicMaterial attach="material" color="white" />
         </Sphere>
     );
 };

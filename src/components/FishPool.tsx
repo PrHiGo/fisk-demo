@@ -1,27 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Fish } from "./Fish"; // Antag att din Fish-komponent är definierad någon annanstans
+import React, { useState, useEffect } from 'react';
+import { Fish } from './Fish'; // Assuming your Fish component is defined elsewhere
+import { entryPoints } from "./Fish"
 
+// Defines the properties each fish object will have
 interface FishObject {
-    id: number;
-    active: boolean;
+    id: number;     // Unique identifier for each fish
+    active: boolean; // Whether the fish is active (visible) or not
 }
 
+// A helper function to create a new fish object
 const createFishObject = (id: number): FishObject => ({
     id,
-    active: false, // Inledningsvis inaktiva
+    active: false, // All fish start as inactive
 });
 
-export const FishPool = () => {
+export const FishPool: React.FC = () => {
+    const FishMemoized = React.memo(Fish);
     const [fishPool, setFishPool] = useState<FishObject[]>(() =>
-        Array.from({ length: 10 }, (_, i) => createFishObject(i))
+        Array.from({ length: 100 }, (_, i) => createFishObject(i))
     );
 
+    // This function will look for the first inactive fish and make it active
     const activateFish = () => {
-        // Hitta första inaktiva fisken och aktivera
-        const index = fishPool.findIndex((fish) => !fish.active);
-        if (index !== -1) {
-            // Aktivera endast en fisk åt gången
-            setFishPool((currentFishPool) =>
+        // Find the index of the first fish that is inactive
+        const index = fishPool.findIndex(fish => !fish.active);
+
+        if (index !== -1) { // Check if an inactive fish was found
+            setFishPool(currentFishPool =>
+                // Update our array of fish, changing the found fish to active
                 currentFishPool.map((fish, i) =>
                     i === index ? { ...fish, active: true } : fish
                 )
@@ -29,19 +35,33 @@ export const FishPool = () => {
         }
     };
 
+    // Effect to regularly activate fish every 5 seconds
     useEffect(() => {
-        // Sätt upp ett intervall för att aktivera fiskar
-        const interval = setInterval(() => {
-            activateFish();
-        }, 5000);
+        const interval = setInterval(activateFish, 5000);
 
+        // Cleanup function to clear the interval when the component unmounts
         return () => clearInterval(interval);
-    }, [fishPool]);
+    }, [fishPool]); // Re-run this effect if the fishPool state changes
+
+    // Function to deactivate a fish by its id
+    const deactivateFish = (id: number) => {
+        setFishPool(currentFishPool =>
+            // Update the fish pool, setting the specified fish to inactive
+            currentFishPool.map(fish =>
+                fish.id === id ? { ...fish, active: false } : fish
+            )
+        );
+    };
 
     return (
         <>
-            {fishPool.filter((fish) => fish.active).map((fish) => (
-                <Fish key={fish.id} />
+            {fishPool.filter(fish => fish.active).map((fish, index) => (
+                <FishMemoized
+                    key={fish.id}
+                    id={fish.id}
+                    entryPoint={index % entryPoints.length}
+                    onCollide={() => deactivateFish(fish.id)}
+                />
             ))}
         </>
     );

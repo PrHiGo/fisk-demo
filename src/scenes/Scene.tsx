@@ -1,10 +1,12 @@
 import React, { ReactNode, createContext, useState } from "react";
-import { OrbitControls, PerspectiveCamera, } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Suspense } from "react";
 import { Ground } from "../components/Ground";
 import { Frame } from "../components/Frame";
 import { GunBlaster } from "../components/GunBlaster";
 import { FishPool } from "../components/FishPool";
+import { Html } from '@react-three/drei';
+import { BoundaryFrame } from "../components/BoundaryFrame";
 
 interface SceneProps {
     children?: ReactNode;
@@ -23,27 +25,23 @@ export const Scene: React.FC<SceneProps> = ({ children }) => {
     };
 
     return (
-        <SceneContext.Provider value={{ handleFishHit }}>
-            <Suspense fallback={null}>
-                {children}
-                <ambientLight intensity={1} />
-                <directionalLight
-                    position={[0, 10, 0]} // Positionen på ljuset, så det lyser på marken från en vinkel
-                    intensity={1} // Intensiteten på ljuset
-                    castShadow // Gör så att ljuset kan kasta skuggor
-                />
-                <Ground />
-                <Frame />
-                <FishPool />
-                <GunBlaster />
-                <PerspectiveCamera makeDefault position={[0, 20, 0]} />
-                <OrbitControls />
-            </Suspense>
-        </SceneContext.Provider >
+        <>
+            <Html className="absolute top-4 left-4 text-white">
+                Poäng: {score}
+            </Html>
+            <SceneContext.Provider value={{ handleFishHit }}>
+                <Suspense fallback={null}>
+                    {children}
+                    <ambientLight intensity={1} />
+                    <Ground />
+                    <Frame />
+                    <BoundaryFrame />
+                    <FishPool />
+                    <GunBlaster />
+                    <PerspectiveCamera makeDefault position={[0, 20, 0]} />
+                    <OrbitControls />
+                </Suspense>
+            </SceneContext.Provider>
+        </>
     );
 }
-
-
-
-
-
