@@ -1,11 +1,9 @@
 import React, { ReactNode, createContext, useState } from "react";
-import { Environment, OrbitControls, PerspectiveCamera, } from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera, } from "@react-three/drei";
 import { Suspense } from "react";
 import { Ground } from "../components/Ground";
 import { Frame } from "../components/Frame";
-import { Fish } from "../components/Fish";
 import { GunBlaster } from "../components/GunBlaster";
-import { ScoreDisplayer } from "../components/ScoreDisplayer";
 import { FishPool } from "../components/FishPool";
 
 interface SceneProps {

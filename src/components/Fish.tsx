@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from "react";
-import { useLoader, useThree, useFrame } from "@react-three/fiber";
+import React, { useEffect } from "react";
+import { useLoader, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useBox } from "@react-three/cannon";
 import { useAnimations } from "@react-three/drei";
 import FishModel from "../models/angler_low.glb";
-import { Mesh } from "three";
 import { Group } from "three";
 
 export const Fish = () => {
