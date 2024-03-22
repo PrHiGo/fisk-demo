@@ -1,16 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useLoader, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useBox } from "@react-three/cannon";
-import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
-import { useAnimations } from "@react-three/drei";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils";
+import { AnimationMixer, Group, AnimationClip } from "three";
 import FishModel from "../models/angler_low.glb";
-import { Group } from "three";
 
-export const Fish = () => {
+export const Fish: React.FC = () => {
     const gltf = useLoader(GLTFLoader, FishModel);
-    const { scene, animations } = gltf;
-    const { actions } = useAnimations(animations, scene);
+    const clonedSceneRef = useRef<Group>(null);
+    const mixerRef = useRef<AnimationMixer | null>(null);
+
+    const animations = gltf.animations.map(clip => AnimationClip.parse(AnimationClip.toJSON(clip)));
 
     const randomX = Math.floor(Math.random() * 21) - 10;
     const randomZ = Math.random() >= 0.5 ? -6 : 6;
@@ -24,16 +25,22 @@ export const Fish = () => {
     }));
 
     useEffect(() => {
-        if (actions) {
-            const action = Object.values(actions)[0];
-            if (action) {
+        if (clonedSceneRef.current) {
+            mixerRef.current = new AnimationMixer(clonedSceneRef.current);
+            animations.forEach((clip) => {
+                const action = mixerRef.current!.clipAction(clip);
                 action.play();
-            }
+            });
         }
-    }, [actions]);
 
-    // Fiskjäveln rör på sig här
-    useFrame((state, delta) => {
+        return () => {
+            mixerRef.current?.stopAllAction();
+        };
+    }, [animations]);
+
+    useFrame((_, delta) => {
+        mixerRef.current?.update(delta);
+
         if (rotateFish) {
             api.velocity.set(0, 0, -1);
         } else {
@@ -42,18 +49,13 @@ export const Fish = () => {
     });
 
     return (
-        <>
-            <group ref={ref as React.MutableRefObject<Group>}>
-                <primitive
-                    object={clone(gltf.scene)}
-                    scale={[1, 1, 1]}
-                    rotation={[0, rotateFish ? Math.PI : 0, 0]}
-                />
-                <mesh>
-                    <boxGeometry args={[0.5, 0.5, 0.5]} />
-                    <meshBasicMaterial wireframe={true} />
-                </mesh>
-            </group>
-        </>
+        <group ref={ref as React.MutableRefObject<Group>}>
+            <primitive
+                object={clone(gltf.scene)}
+                ref={clonedSceneRef}
+                scale={[1, 1, 1]}
+                rotation={[0, rotateFish ? Math.PI : 0, 0]}
+            />
+        </group>
     );
 };
