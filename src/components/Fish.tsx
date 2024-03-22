@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useLoader, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useBox } from "@react-three/cannon";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import { useAnimations } from "@react-three/drei";
 import FishModel from "../models/angler_low.glb";
 import { Group } from "three";
@@ -44,8 +45,7 @@ export const Fish = () => {
         <>
             <group ref={ref as React.MutableRefObject<Group>}>
                 <primitive
-                    ref={ref}
-                    object={scene}
+                    object={clone(gltf.scene)}
                     scale={[1, 1, 1]}
                     rotation={[0, rotateFish ? Math.PI : 0, 0]}
                 />
