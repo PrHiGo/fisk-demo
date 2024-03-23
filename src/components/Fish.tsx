@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useLoader, useFrame } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useBox } from '@react-three/cannon';
@@ -12,10 +12,9 @@ type Direction = -1 | 1;
 type FishProps = {
     id: number;
     onCollide: (id: number) => void;
-    entryPoint: number; // Lägg till en ny prop för att definiera ingångspunkten
 };
 
-export const Fish: React.FC<FishProps> = ({ id, onCollide, entryPoint }) => {
+export const Fish: React.FC<FishProps> = ({ id, onCollide }) => {
     const { handleFishHit } = useContext(SceneContext);
     const gltf = useLoader(GLTFLoader, FishModel);
     const clonedSceneRef = useRef<Group>(null);
@@ -30,7 +29,7 @@ export const Fish: React.FC<FishProps> = ({ id, onCollide, entryPoint }) => {
     const [ref, api] = useBox(() => ({
         type: 'Dynamic',
         mass: 0,
-        position,
+        position: [randomX, 0, randomZ],
         userData: { name: 'Fish', id },
         onCollide: e => {
             if (e.body.userData.name === 'Bullet') {

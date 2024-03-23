@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Fish } from './Fish'; // Assuming your Fish component is defined elsewhere
-import { entryPoints } from "./Fish"
 
 // Defines the properties each fish object will have
 interface FishObject {
@@ -15,7 +14,6 @@ const createFishObject = (id: number): FishObject => ({
 });
 
 export const FishPool: React.FC = () => {
-    const FishMemoized = React.memo(Fish);
     const [fishPool, setFishPool] = useState<FishObject[]>(() =>
         Array.from({ length: 100 }, (_, i) => createFishObject(i))
     );
@@ -56,10 +54,9 @@ export const FishPool: React.FC = () => {
     return (
         <>
             {fishPool.filter(fish => fish.active).map((fish, index) => (
-                <FishMemoized
+                <Fish
                     key={fish.id}
                     id={fish.id}
-                    entryPoint={index % entryPoints.length}
                     onCollide={() => deactivateFish(fish.id)}
                 />
             ))}
