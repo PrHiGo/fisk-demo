@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLoader, useThree, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useBox } from "@react-three/cannon";
@@ -15,6 +15,8 @@ export const Fish = () => {
     const randomX = Math.floor(Math.random() * 21) - 10;
     const randomZ = Math.random() >= 0.5 ? -6 : 6;
     const rotateFish = randomZ === 6;
+    const [movementDirection, setMovementDirection] = useState(randomZ >= 0 ? -1 : 1);
+
 
     const [ref, api] = useBox(() => ({
         type: 'Dynamic',
@@ -34,11 +36,7 @@ export const Fish = () => {
 
     // Fiskjäveln rör på sig här
     useFrame((state, delta) => {
-        if (rotateFish) {
-            api.velocity.set(0, 0, -1);
-        } else {
-            api.velocity.set(0, 0, 1);
-        }
+        api.velocity.set(0, 0, movementDirection);
     });
 
     return (

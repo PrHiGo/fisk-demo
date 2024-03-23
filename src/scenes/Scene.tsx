@@ -1,5 +1,5 @@
 import React, { ReactNode, createContext, useState } from "react";
-import { Environment, OrbitControls, PerspectiveCamera, } from "@react-three/drei";
+import { Environment, Html, OrbitControls, PerspectiveCamera, } from "@react-three/drei";
 import { Suspense } from "react";
 import { Ground } from "../components/Ground";
 import { Frame } from "../components/Frame";
@@ -37,7 +37,6 @@ export const Scene: React.FC<SceneProps> = ({ children }) => {
                 <Frame />
                 <Fish />
                 <GunBlaster />
-                <ScoreDisplayer score={score} />
                 <PerspectiveCamera makeDefault position={[0, 20, 0]} />
                 <OrbitControls />
             </Suspense>
