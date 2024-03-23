@@ -2,7 +2,6 @@ import React, { ReactNode, createContext, useState } from "react";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Suspense } from "react";
 import { Ground } from "../components/Ground";
-import { Frame } from "../components/Frame";
 import { GunBlaster } from "../components/GunBlaster";
 import { FishPool } from "../components/FishPool";
 import { Html } from '@react-three/drei';
@@ -34,7 +33,6 @@ export const Scene: React.FC<SceneProps> = ({ children }) => {
                     {children}
                     <ambientLight intensity={1} />
                     <Ground />
-                    <Frame />
                     <BoundaryFrame />
                     <FishPool />
                     <GunBlaster />

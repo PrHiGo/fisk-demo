@@ -12,10 +12,9 @@ export const Ground = () => {
         type: 'Kinematic'
     }));
 
-    // Använd viewportens bredd och höjd för att definiera planetens storlek
-    // Du kan behöva multiplicera med en skalfaktor beroende på din världs skala.
-    const planeWidth = viewport.width;
-    const planeHeight = viewport.height;
+    // Size with 24 inch 1920 x 1080
+    const planeWidth = 39.4;
+    const planeHeight = 18.7;
 
     return (
         <mesh ref={ref} receiveShadow>

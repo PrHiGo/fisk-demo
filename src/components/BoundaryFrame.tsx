@@ -1,5 +1,4 @@
 import React from 'react';
-import { useThree } from '@react-three/fiber';
 import { useBox } from '@react-three/cannon';
 import { Mesh } from 'three';
 
@@ -9,9 +8,10 @@ type BoundaryFrameProps = {
 };
 
 export const BoundaryFrame: React.FC<BoundaryFrameProps> = ({ thickness = 0.3, height = 0.5 }) => {
-    const { viewport } = useThree();
-    const frameWidth = viewport.width + 2;
-    const frameHeight = viewport.height + 2;
+
+    // Size with 24 inch 1920 x 1080
+    const frameWidth = 39.4 + 2;
+    const frameHeight = 18.7 + 2;
 
     const positions: [number, number, number][] = [
         [0, height / 2, frameHeight / 2 + thickness / 2], // Front
