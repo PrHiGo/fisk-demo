@@ -1,14 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useLoader, useFrame } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { useBox } from "@react-three/cannon";
-import { clone } from "three/examples/jsm/utils/SkeletonUtils";
-import { AnimationMixer, Group, AnimationClip } from "three";
-import FishModel from "../models/angler_low.glb";
+import React, { useContext, useEffect, useRef } from 'react';
+import { useLoader, useFrame } from '@react-three/fiber';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { useBox } from '@react-three/cannon';
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
+import { AnimationMixer, Group, AnimationClip } from 'three';
+import FishModel from '../models/angler_low.glb';
+import { SceneContext } from '../scenes/Scene';
 
 type Direction = -1 | 1;
 
-export const Fish: React.FC = () => {
+type FishProps = {
+    id: number;
+    onCollide: (id: number) => void;
+    entryPoint: number; // Lägg till en ny prop för att definiera ingångspunkten
+};
+
+export const Fish: React.FC<FishProps> = ({ id, onCollide, entryPoint }) => {
+    const { handleFishHit } = useContext(SceneContext);
     const gltf = useLoader(GLTFLoader, FishModel);
     const clonedSceneRef = useRef<Group>(null);
     const mixerRef = useRef<AnimationMixer | null>(null);
@@ -19,16 +27,24 @@ export const Fish: React.FC = () => {
     const randomZ = Math.random() >= 0.5 ? -6 : 6;
     const [movementDirection, setMovementDirection] = useState<Direction>(randomZ >= 0 ? -1 : 1);
 
-
     const [ref, api] = useBox(() => ({
         type: 'Dynamic',
         mass: 0,
-        position: [randomX, 0, randomZ],
-        userData: { name: "Fish" },
+        position,
+        userData: { name: 'Fish', id },
+        onCollide: e => {
+            if (e.body.userData.name === 'Bullet') {
+                onCollide(id);
+                handleFishHit();
+            }
+            if (e.body.userData.name === 'BoundaryFrame') {
+                onCollide(id);
+            }
+        },
     }));
 
+    // Animation and motion logic
     useEffect(() => {
-
         const calculateRotation = (direction: Direction): number => {
             return direction === -1 ? Math.PI : 0;
         };
@@ -63,10 +79,6 @@ export const Fish: React.FC = () => {
                     ref={clonedSceneRef}
                     scale={[1, 1, 1]}
                 />
-                <mesh>
-                    <boxGeometry args={[0.5, 0.5, 0.5]} />
-                    <meshBasicMaterial wireframe={true} />
-                </mesh>
             </group>
         </>
     );

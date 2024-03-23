@@ -35,7 +35,7 @@ export const GunBlaster = () => {
         const offsetZ = Math.cos(gunRotation.y) * bulletOffsetForward;
         const bulletStartPosition: [number, number, number] = [
             -offsetX,
-            1,
+            0.25,
             8.5 - offsetZ
         ];
 
