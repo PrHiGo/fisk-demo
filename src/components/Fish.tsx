@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLoader, useThree, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useBox } from "@react-three/cannon";
@@ -7,14 +7,16 @@ import FishModel from "../models/angler_low.glb";
 import { Mesh } from "three";
 import { Group } from "three";
 
+type Direction = -1 | 1;
+
 export const Fish = () => {
     const gltf = useLoader(GLTFLoader, FishModel);
     const { scene, animations } = gltf;
     const { actions } = useAnimations(animations, scene);
-
     const randomX = Math.floor(Math.random() * 21) - 10;
     const randomZ = Math.random() >= 0.5 ? -6 : 6;
-    const rotateFish = randomZ === 6;
+    const [movementDirection, setMovementDirection] = useState<Direction>(randomZ >= 0 ? -1 : 1);
+
 
     const [ref, api] = useBox(() => ({
         type: 'Dynamic',
@@ -30,15 +32,16 @@ export const Fish = () => {
                 action.play();
             }
         }
-    }, [actions]);
+        const calculateRotation = (direction: Direction): number => {
+            return direction === -1 ? Math.PI : 0;
+        };
+        const rotationY = calculateRotation(movementDirection);
+        api.rotation.set(0, rotationY, 0);
+    }, [actions, movementDirection, api.rotation,]);
 
     // Fiskjäveln rör på sig här
     useFrame((state, delta) => {
-        if (rotateFish) {
-            api.velocity.set(0, 0, -1);
-        } else {
-            api.velocity.set(0, 0, 1);
-        }
+        api.velocity.set(0, 0, movementDirection);
     });
 
     return (
@@ -48,7 +51,6 @@ export const Fish = () => {
                     ref={ref}
                     object={scene}
                     scale={[1, 1, 1]}
-                    rotation={[0, rotateFish ? Math.PI : 0, 0]}
                 />
                 <mesh>
                     <boxGeometry args={[0.5, 0.5, 0.5]} />
