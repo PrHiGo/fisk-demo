@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLoader, useThree, useFrame } from "@react-three/fiber";
+import { useLoader, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useBox } from "@react-three/cannon";
-import { useAnimations } from "@react-three/drei";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils";
+import { AnimationMixer, Group, AnimationClip } from "three";
 import FishModel from "../models/angler_low.glb";
-import { Mesh } from "three";
-import { Group } from "three";
 
 type Direction = -1 | 1;
 
-export const Fish = () => {
+export const Fish: React.FC = () => {
     const gltf = useLoader(GLTFLoader, FishModel);
-    const { scene, animations } = gltf;
-    const { actions } = useAnimations(animations, scene);
+    const clonedSceneRef = useRef<Group>(null);
+    const mixerRef = useRef<AnimationMixer | null>(null);
+    const animations = gltf.animations.map(clip => AnimationClip.parse(AnimationClip.toJSON(clip)));
+
+
     const randomX = Math.floor(Math.random() * 21) - 10;
     const randomZ = Math.random() >= 0.5 ? -6 : 6;
     const [movementDirection, setMovementDirection] = useState<Direction>(randomZ >= 0 ? -1 : 1);
@@ -26,21 +28,30 @@ export const Fish = () => {
     }));
 
     useEffect(() => {
-        if (actions) {
-            const action = Object.values(actions)[0];
-            if (action) {
-                action.play();
-            }
-        }
+
         const calculateRotation = (direction: Direction): number => {
             return direction === -1 ? Math.PI : 0;
         };
         const rotationY = calculateRotation(movementDirection);
         api.rotation.set(0, rotationY, 0);
-    }, [actions, movementDirection, api.rotation,]);
+
+
+        if (clonedSceneRef.current) {
+            mixerRef.current = new AnimationMixer(clonedSceneRef.current);
+            animations.forEach(clip => {
+                const action = mixerRef.current!.clipAction(clip);
+                action.play();
+            });
+        }
+        return () => {
+            mixerRef.current?.stopAllAction();
+        };
+
+    }, [movementDirection, api.rotation, animations]);
 
     // Fiskjäveln rör på sig här
     useFrame((state, delta) => {
+        mixerRef.current?.update(delta);
         api.velocity.set(0, 0, movementDirection);
     });
 
@@ -48,8 +59,8 @@ export const Fish = () => {
         <>
             <group ref={ref as React.MutableRefObject<Group>}>
                 <primitive
-                    ref={ref}
-                    object={scene}
+                    object={clone(gltf.scene)}
+                    ref={clonedSceneRef}
                     scale={[1, 1, 1]}
                 />
                 <mesh>
