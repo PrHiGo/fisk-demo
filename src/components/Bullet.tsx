@@ -11,9 +11,22 @@ export const Bullet = ({ position, rotation }: { position: [number, number, numb
         mass: 0,
         position,
         userData: { name: "Bullet" },
+        onCollide: e => {
+            if (e.body?.userData?.name === 'Fish') {
+                removeBullet();
+            }
+            if (e.body?.userData?.name === 'BoundaryFrame') {
+                removeBullet();
+            }
+        },
     }));
 
     const direction = new Vector3();
+
+    const removeBullet = () => {
+        api.position.set(-1000, 0, 0);
+        api.velocity.set(0, 0, 0);
+    };
 
     useFrame(() => {
         direction.set(-Math.sin(rotation), 0, -Math.cos(rotation)).normalize();

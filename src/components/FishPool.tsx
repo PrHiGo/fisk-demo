@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Fish } from './Fish';
 
-// Defines the properties each fish object will have
 interface FishObject {
     id: number;
     active: boolean;
@@ -9,12 +8,12 @@ interface FishObject {
 
 const createFishObject = (id: number): FishObject => ({
     id,
-    active: false, // All fish start as inactive
+    active: false,
 });
 
 export const FishPool: React.FC = () => {
     const [fishPool, setFishPool] = useState<FishObject[]>(() =>
-        Array.from({ length: 100 }, (_, i) => createFishObject(i))
+        Array.from({ length: 1000 }, (_, i) => createFishObject(i))
     );
 
     // Effect to regularly activate fish every x seconds
@@ -34,20 +33,23 @@ export const FishPool: React.FC = () => {
             }
         };
 
-        const interval = setInterval(activateFish, 1000);
+        const interval = setInterval(activateFish, 500);
 
         return () => clearInterval(interval);
     }, [fishPool]);
 
 
-    const deactivateFish = (id: number) => {
+    const deactivateFish = useCallback((id: number) => {
         setFishPool(currentFishPool =>
-            // Update the fish pool, setting the specified fish to inactive
             currentFishPool.map(fish =>
-                fish.id === id ? { ...fish, active: false } : fish
+                fish.id === id ? { ...fish, active: false, position: { x: 0, y: -1000, z: 0 } } : fish
             )
         );
-    };
+    }, []);
+
+    /*     const activateFish = useCallback(() => {
+            // Create logic and use if needed 
+        }, []); */
 
     return (
         <>

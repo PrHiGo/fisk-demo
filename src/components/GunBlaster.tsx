@@ -27,6 +27,7 @@ export const GunBlaster = () => {
         return () => {
             document.removeEventListener("mousemove", updateGunRotation);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spacePressed]);
 
     const shootBullet = () => {

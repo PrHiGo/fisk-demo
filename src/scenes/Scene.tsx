@@ -35,7 +35,7 @@ export const Scene: React.FC<SceneProps> = ({ children }) => {
                     <BoundaryFrame />
                     <FishPool />
                     <GunBlaster />
-                    <PerspectiveCamera makeDefault position={[0, 20, 0]} />
+                    <PerspectiveCamera makeDefault position={[0, 30, 0]} />
                     <OrbitControls />
                 </Suspense>
             </SceneContext.Provider>
