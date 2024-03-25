@@ -1,6 +1,6 @@
-import React from 'react';
 import { useBox } from '@react-three/cannon';
 import { Mesh } from 'three';
+import React from 'react';
 
 type BoundaryFrameProps = {
     thickness?: number;
@@ -14,15 +14,15 @@ export const BoundaryFrame: React.FC<BoundaryFrameProps> = ({ thickness = 0.3, h
     const frameHeight = 18.7 + 2;
 
     const positions: [number, number, number][] = [
-        [0, height / 2, frameHeight / 2 + thickness / 2], // Front
-        [0, height / 2, -frameHeight / 2 - thickness / 2], // Back
-        [frameWidth / 2 + thickness / 2, height / 2, 0], // Right
-        [-frameWidth / 2 - thickness / 2, height / 2, 0], // Left
+        [0, height / 2, frameHeight / 2 + thickness / 2],
+        [0, height / 2, -frameHeight / 2 - thickness / 2],
+        [frameWidth / 2 + thickness / 2, height / 2, 0],
+        [-frameWidth / 2 - thickness / 2, height / 2, 0],
     ];
 
     const args: [number, number, number][] = [
-        [frameWidth, height, thickness], // Front and Back
-        [thickness, height, frameHeight + thickness], // Right and Left
+        [frameWidth, height, thickness],
+        [thickness, height, frameHeight + thickness],
     ];
 
     type BoundaryPieceProps = {

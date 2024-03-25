@@ -20,13 +20,12 @@ export const Scene: React.FC<SceneProps> = ({ children }) => {
 
     const handleFishHit = () => {
         setScore(score + 10);
-        console.log("Poäng: ", score + 10);
     };
 
     return (
         <>
             <Html className="absolute top-4 left-4 text-white">
-                Poäng: {score}
+                Score: {score}
             </Html>
             <SceneContext.Provider value={{ handleFishHit }}>
                 <Suspense fallback={null}>

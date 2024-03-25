@@ -6,7 +6,6 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import { AnimationMixer, Group, AnimationClip } from 'three';
 import FishModel from '../models/angler_low.glb';
 import { SceneContext } from '../scenes/Scene';
-import { useThree } from '@react-three/fiber';
 
 type Direction = -1 | 1;
 
@@ -20,14 +19,13 @@ export const Fish: React.FC<FishProps> = ({ id, onCollide }) => {
     const gltf = useLoader(GLTFLoader, FishModel);
     const clonedSceneRef = useRef<Group>(null);
     const mixerRef = useRef<AnimationMixer | null>(null);
-    const { viewport } = useThree();
     const animations = gltf.animations.map(clip => AnimationClip.parse(AnimationClip.toJSON(clip)));
 
 
 
     const randomX = Math.floor(Math.random() * 21) - 10;
     const randomZ = Math.random() >= 0.5 ? -9 : 9;
-    const [movementDirection, setMovementDirection] = useState<Direction>(randomZ >= 0 ? -1 : 1);
+    const [movementDirection] = useState<Direction>(randomZ >= 0 ? -1 : 1);
 
     const [ref, api] = useBox(() => ({
         type: 'Dynamic',
@@ -67,7 +65,6 @@ export const Fish: React.FC<FishProps> = ({ id, onCollide }) => {
 
     }, [movementDirection, api.rotation, animations]);
 
-    // Fiskjäveln rör på sig här
     useFrame((state, delta) => {
         mixerRef.current?.update(delta);
         api.velocity.set(0, 0, movementDirection);

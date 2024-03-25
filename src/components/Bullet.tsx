@@ -1,8 +1,8 @@
 import { useSphere } from "@react-three/cannon";
-import { Sphere } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import React, { useContext } from "react";
+import { Sphere } from "@react-three/drei";
 import { Mesh, Vector3 } from "three";
+import React from "react";
 
 export const Bullet = ({ position, rotation }: { position: [number, number, number], rotation: number }) => {
 
