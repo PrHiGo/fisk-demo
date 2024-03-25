@@ -27,11 +27,11 @@ export const Fish: React.FC<FishProps> = React.memo(({ id, onCollide }) => {
         position: [randomX, 0, randomZ],
         userData: { name: 'Fish', id },
         onCollide: e => {
-            if (e.body.userData.name === 'Bullet') {
+            if (e.body?.userData?.name === 'Bullet') {
                 onCollide(id);
                 handleFishHit();
             }
-            if (e.body.userData.name === 'BoundaryFrame') {
+            if (e.body?.userData?.name === 'BoundaryFrame') {
                 onCollide(id);
             }
         },

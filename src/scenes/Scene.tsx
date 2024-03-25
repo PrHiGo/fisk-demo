@@ -19,13 +19,15 @@ export const Scene: React.FC<SceneProps> = ({ children }) => {
     const [score, setScore] = useState(0);
 
     const handleFishHit = () => {
-        setScore(score + 10);
+        setScore((currentScore) => currentScore + 10);
     };
 
     return (
         <>
-            <Html className="absolute top-4 left-4 text-white">
-                Score: {score}
+            <Html>
+                <div className="flex gap-2 text-white">
+                    <p>Score:</p> <p>{score}</p>
+                </div>
             </Html>
             <SceneContext.Provider value={{ handleFishHit }}>
                 <Suspense fallback={null}>

@@ -37,7 +37,7 @@ export const GunBlaster = () => {
         const bulletStartPosition: [number, number, number] = [
             -offsetX,
             0.25,
-            8.5 - offsetZ
+            9 - offsetZ
         ];
 
         setBullets([...bullets, <Bullet key={bullets.length} position={bulletStartPosition} rotation={gunRotation.y} />]);
@@ -46,7 +46,7 @@ export const GunBlaster = () => {
 
     return (
         <>
-            <group position={[0, 0.2, 8.5]} rotation={[0, gunRotation.y + Math.PI, 0]}>
+            <group position={[0, 0.2, 9]} rotation={[0, gunRotation.y + Math.PI, 0]}>
                 <mesh position={[0, 0, 0.5]}>
                     <boxGeometry args={[0.5, 0.5, 2]} />
                     <meshStandardMaterial color="red" />
