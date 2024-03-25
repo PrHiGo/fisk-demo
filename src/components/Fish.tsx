@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useBox } from '@react-three/cannon';
 import { Group } from 'three';
-import FishModel from '../models/angler_low.glb';
+import FishModel from '../models/dafish.glb';
 import { SceneContext } from '../scenes/Scene';
 import { useCloneGLTF } from '../hooks/useCloneGLTF';
 

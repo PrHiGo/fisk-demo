@@ -13,7 +13,7 @@ const createFishObject = (id: number): FishObject => ({
 
 export const FishPool: React.FC = () => {
     const [fishPool, setFishPool] = useState<FishObject[]>(() =>
-        Array.from({ length: 1000 }, (_, i) => createFishObject(i))
+        Array.from({ length: 120 }, (_, i) => createFishObject(i))
     );
 
     // Effect to regularly activate fish every x seconds
@@ -33,7 +33,7 @@ export const FishPool: React.FC = () => {
             }
         };
 
-        const interval = setInterval(activateFish, 500);
+        const interval = setInterval(activateFish, 0);
 
         return () => clearInterval(interval);
     }, [fishPool]);
