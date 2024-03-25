@@ -34,7 +34,7 @@ export const FishPool: React.FC = () => {
             }
         };
 
-        const interval = setInterval(activateFish, 2000);
+        const interval = setInterval(activateFish, 1000);
 
         return () => clearInterval(interval);
     }, [fishPool]);
